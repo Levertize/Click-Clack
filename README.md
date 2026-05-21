@@ -1,37 +1,35 @@
 # Click-Clack: Aesthetic Typing Simulator
 
-**Click-Clack** is a premium, visual-heavy typing sandbox built using React, TypeScript, Tailwind CSS, Framer Motion, and global state persistence with Zustand. Every keystroke triggers custom-engineered, canvas-rendered particle effects, tactile mechanical audio clicks, and interface screen shake that make typing feel incredibly satisfying.
+**Click-Clack** is a premium, visual-heavy typing sandbox built with React, TypeScript, Tailwind CSS, Framer Motion, and Zustand for state persistence. Every keystroke triggers custom-engineered, canvas-rendered particle effects, tactile mechanical switch audio clicks, and satisfying viewport rumbles that transform standard typing into an immersive audiovisual experience.
 
 ---
 
 ## ✨ Features
 
 ### 🎮 Typing Modes
-- **Sandbox Play**: A cardless, borderless, minimal layout where your typing characters float freely over background particles.
-- **10FastFingers Test**: A structured words grid supporting **English** and **Indonesian** lists, live WPM/Accuracy gauges, countdown timer, and a dedicated results modal card with metrics.
+*   **Sandbox Play**: A cardless, borderless, ultra-minimal space. Text floats freely over responsive particle backgrounds, completely uncluttered by standard UI containers.
+*   **10FastFingers Test**: A timed typing speed test (15s, 30s, 60s, or 120s) with live WPM/Accuracy metrics, a ticking circular countdown timer, support for **English** and **Indonesian** word dictionaries, and a detailed post-test statistics modal card.
 
 ### 🎨 UI Customizer Preset Styles
-Toggle between visual styles that restyle the entire page, headers, logo, and settings drawers:
-- **Classic**: Original theme style.
-- **Cute ✿**: Bubbly pastel pink interfaces and double border styling.
-- **Terminal (Hacker)**: Monospace green command terminal with bash shell-like titles.
-- **Cyberpunk**: Cyan-glowing high-tech frames with terminal indicators.
-- **Arcade 🎮**: retro yellow console grids.
-- **Glassmorphism**: Frosted transparent layouts.
-*(Brand visibility toggle allows hiding/showing the logo watermark).*
+Toggle between cohesive visual aesthetics that restyle the entire page, headers, logo, settings drawers, and control panels:
+*   **Classic**: Clean, modern dark/light style following the active core theme.
+*   **Cute ✿**: Bubbly pastel pink styling, rounded shapes, and double border aesthetics.
+*   **Terminal (Hacker)**: Green monospace command shell interface with Unix-like output formatting.
+*   **Cyberpunk**: Cyan-glowing high-tech frames with diagnostics readouts.
+*   **Arcade 🎮**: Retro 8-bit game console grids and bright golden highlights.
+*   **Glassmorphism**: Frosted transparent glass layouts using backdrop filter effects.
+*   *(Watermark toggle enables or disables the brand watermark logo dynamically).*
 
 ### 🌈 Visual & Audio FX
-- **8 Keystroke Effects**: `Particles`, `Explode`, `Ripple`, `Sparks`, `Constellation`, `Trail` (bubbles), `Ink Blots`, and `Fire`.
-- **4 Typography Options**: Space Mono, Syne Mono, Playfair Display, and DM Sans.
-- **4 Interactive Backgrounds**: `Bokeh Dots`, `Starfield` (twinkling crosses), `Elastic Grid` (reactive line lattice), and `Matrix Rain` (scrolling rain streams).
-- **Interactive Force Fields**: Mouse movement repels/attracts particles; clicks generate an expanding warp shockwave.
-- **tactile Audio Synth**: Sound presets mimicking Blue switches, Creamy thock (brown) switches, Typewriters, or Arcade Pop sounds with configurable pitch and volume.
-- **Tactile Screen Shake**: Adjustable viewport impact rumble.
-- **Rainbow Characters**: Inline character colorizer mapping dynamic accents to typed text.
+*   **8 Keystroke Effects**: `Particles`, `Explode`, `Ripple`, `Sparks`, `Constellation`, `Trail` (bubbles), `Ink Blots`, and `Fire`.
+*   **4 Interactive Backgrounds**: `Bokeh Dots` (ambient circles), `Starfield` (twinkling crosses), `Elastic Grid` (reactive interactive lattice), and `Matrix Rain` (scrolling green binary stream).
+*   **Mouse Force Fields**: Ambient background particles interactively react to the cursor path (repelling or attracting) and trigger warp shockwaves on mouse clicks.
+*   **Tactile Audio Synth**: Configurable sound profiles simulating tactile *Blue Clicky* switches, *Brown Creamy Thock* switches, *Retro Typewriters*, or *Arcade Pops* with adjustable volume and pitch.
+*   **Accent Synchronization**: Custom color presets (`var(--ui-accent)`) dynamically flow down to settings toggles, volume/pitch sliders, active caret indicators, typography highlights, cursors, and custom background particle colors.
 
-### ⚡ Performance Optimization
-- **60fps Custom Cursor**: High-performance outer ring cursor using direct DOM ref updates and `requestAnimationFrame` loops (completely bypassing React virtual DOM diffing to eliminate lag).
-- **GPU Compositing Boost**: Viewport blur overlays replaced with alpha colors to keep drawer slides smooth.
+### ⚡ Performance & Rendering
+*   **Ultra-smooth Custom Cursor**: Rendered at 60fps using direct DOM reference updates and `requestAnimationFrame` loops, completely bypassing React virtual DOM diffing to eliminate input latency.
+*   **GPU Compositing Optimizations**: High-performance rendering for drawing canvas layers and floating texts. Viewport blur overlays are carefully optimized with transparent alphas to prevent layout thrashing and maintain constant 60fps.
 
 ---
 
@@ -39,15 +37,15 @@ Toggle between visual styles that restyle the entire page, headers, logo, and se
 
 | Shortcut | Action |
 | --- | --- |
-| `Escape` | Close settings and UI Customizer drawers |
+| `Escape` | Close configuration and UI Customizer panels |
 | `Ctrl` / `Cmd` + `,` | Toggle configuration settings drawer |
 | `Ctrl` / `Cmd` + `Backspace` | Clear Sandbox editor text / Restart Typing Test |
 | `Ctrl` / `Cmd` + `Shift` + `R` | Cycle to a random aesthetic core theme |
 
-### Special Key Behaviors:
-- **Backspace**: Spawns active particle effects at half intensity.
-- **Space**: Spawns active particle effects with extra-wide spread velocity.
-- **Enter**: Spawns an extra-large particle burst in the center of the viewport.
+### Special Keystroke Behaviors
+*   **Backspace**: Spawns active particle effects at half velocity.
+*   **Space**: Spawns active particle effects with extra-wide spread velocity.
+*   **Enter**: Spawns an extra-large particle burst in the center of the viewport.
 
 ---
 
@@ -55,17 +53,17 @@ Toggle between visual styles that restyle the entire page, headers, logo, and se
 
 Ensure you have [Node.js](https://nodejs.org) installed on your system.
 
-1. Clone or download the directory.
-2. Open terminal inside the project directory:
-   ```bash
-   npm install
-   ```
-3. Run local dev server:
-   ```bash
-   npm run dev
-   ```
-4. Access local hosting (typically `http://localhost:5173`) in your web browser.
-5. To bundle for production:
-   ```bash
-   npm run build
-   ```
+1.  Clone or download the repository.
+2.  Open your terminal inside the project directory:
+    ```bash
+    npm install
+    ```
+3.  Run the local development server:
+    ```bash
+    npm run dev
+    ```
+4.  Open the local address (usually `http://localhost:5173`) in your browser.
+5.  To compile a production-ready bundle:
+    ```bash
+    npm run build
+    ```
