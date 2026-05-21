@@ -1,7 +1,8 @@
-import { forwardRef, useImperativeHandle, useRef, useEffect } from 'react'
+import { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react'
 import { useSettingsStore } from '../store/settings'
 import { getCaretCoords } from '../hooks/useCaretPos'
 import { themes, pickAccent } from '../themes'
+import { keyboardSynth } from '../utils/audio'
 
 interface EditorProps {
   onKeystroke: (x: number, y: number, key: string) => void
@@ -19,6 +20,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
   ({ onKeystroke, onCharCount, onFocus, onBlur }, ref) => {
     const editorRef = useRef<HTMLDivElement | null>(null)
     const font = useSettingsStore((state) => state.font)
+    const [shakeTransform, setShakeTransform] = useState('translate3d(0, 0, 0)')
 
     useImperativeHandle(ref, () => ({
       focus() {
@@ -111,6 +113,30 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       const isPrintable = key.length === 1 || key === 'Enter' || key === 'Backspace'
       if (!isPrintable) return
 
+      // Play procedurally synthesized sounds
+      const settings = useSettingsStore.getState()
+      keyboardSynth.setVolume(settings.soundVolume / 10)
+      keyboardSynth.setPitch(settings.soundPitch / 5) // pitch slider (default 5 matches 1.0)
+      keyboardSynth.playClick(settings.soundEffect, key)
+
+      // Handle screen shake
+      if (settings.screenShake > 0) {
+        let force = settings.screenShake * 1.5
+        if (key === 'Enter') force *= 2.0
+        else if (key === 'Backspace') force *= 1.3
+        else if (key === ' ') force *= 1.6
+
+        const angle = Math.random() * Math.PI * 2
+        const dist = Math.random() * force
+        const dx = Math.cos(angle) * dist
+        const dy = Math.sin(angle) * dist
+
+        setShakeTransform(`translate3d(${dx}px, ${dy}px, 0)`)
+        setTimeout(() => {
+          setShakeTransform('translate3d(0, 0, 0)')
+        }, 50)
+      }
+
       // Get caret coordinates
       const fallbackX = window.innerWidth / 2
       const fallbackY = window.innerHeight / 2
@@ -153,7 +179,10 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
     }
 
     return (
-      <div className="relative w-full max-w-4xl px-4 py-8">
+      <div 
+        className="relative w-full max-w-4xl px-4 py-8 transition-transform duration-75"
+        style={{ transform: shakeTransform }}
+      >
         <div
           ref={editorRef}
           contentEditable

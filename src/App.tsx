@@ -9,6 +9,7 @@ import { CustomCursor } from './components/CustomCursor'
 import { HintText } from './components/ui/HintText'
 import { CharCounter } from './components/ui/CharCounter'
 import { ToggleButton } from './components/ui/ToggleButton'
+import { StreakPanel } from './components/ui/StreakPanel'
 
 function App() {
   const fxRef = useRef<FxCanvasHandle | null>(null)
@@ -113,6 +114,9 @@ function App() {
 
       {/* Statistics char count indicator */}
       <CharCounter count={charCount} hidden={panelOpen} />
+
+      {/* Real-time typing speed and combo streak */}
+      <StreakPanel hidden={panelOpen} />
 
       {/* Float setting buttons */}
       <ToggleButton onClick={togglePanel} />

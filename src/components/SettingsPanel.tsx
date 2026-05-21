@@ -6,6 +6,9 @@ import { ThemePicker } from './settings/ThemePicker'
 import { FontPicker } from './settings/FontPicker'
 import { SliderRow } from './settings/SliderRow'
 import { ToggleRow } from './settings/ToggleRow'
+import { AudioSettings } from './settings/AudioSettings'
+import { CursorSettings } from './settings/CursorSettings'
+import { BgSettings } from './settings/BgSettings'
 
 export function SettingsPanel() {
   const panelOpen = useSettingsStore((state) => state.panelOpen)
@@ -32,7 +35,7 @@ export function SettingsPanel() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closePanel}
-            className="fixed inset-0 z-40 bg-black/10 backdrop-blur-[2px]"
+            className="fixed inset-0 z-40 bg-black/30"
           />
 
           {/* Settings Panel Content */}
@@ -45,9 +48,8 @@ export function SettingsPanel() {
             style={{
               backgroundColor: 'var(--bg2)',
               borderColor: 'var(--border)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
               color: 'var(--fg)',
+              willChange: 'transform',
             }}
           >
             {/* Header */}
@@ -107,6 +109,15 @@ export function SettingsPanel() {
                   onChange={toggleRainbowChars}
                 />
               </div>
+
+              {/* Audio & Feedback Options */}
+              <AudioSettings />
+
+              {/* Cursor Customization Options */}
+              <CursorSettings />
+
+              {/* Background FX Options */}
+              <BgSettings />
             </div>
           </motion.div>
         </>

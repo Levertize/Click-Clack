@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
+import { useSettingsStore } from '../store/settings'
 
 export function useCursor() {
   const [pos, setPos] = useState({ mouseX: 0, mouseY: 0, ringX: 0, ringY: 0 })
@@ -21,9 +22,12 @@ export function useCursor() {
       const mouse = mouseRef.current
       const ring = ringRef.current
 
+      // Retrieve easing rate dynamically from state
+      const easing = useSettingsStore.getState().cursorEasing
+
       // Smooth interpolation for the ring
-      ring.x += (mouse.x - ring.x) * 0.14
-      ring.y += (mouse.y - ring.y) * 0.14
+      ring.x += (mouse.x - ring.x) * easing
+      ring.y += (mouse.y - ring.y) * easing
 
       setPos({
         mouseX: mouse.x,

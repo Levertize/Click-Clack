@@ -1,4 +1,4 @@
-export type ThemeName = 'cyber' | 'lofi' | 'minimal' | 'vivid' | 'ocean' | 'sakura'
+export type ThemeName = 'cyber' | 'lofi' | 'minimal' | 'vivid' | 'ocean' | 'sakura' | 'synthwave' | 'dracula' | 'nord'
 
 export interface Theme {
   name: string
@@ -85,6 +85,42 @@ export const themes: Record<ThemeName, Theme> = {
     isLight: true,
     scanlines: false,
     fireColors: ['#ffd6e0', '#ffaac0', '#ff80a0'],
+  },
+  synthwave: {
+    name: 'Synthwave',
+    bg: '#140526',
+    bg2: '#230b3b',
+    fg: '#ff007f',
+    muted: 'rgba(255,0,127,0.2)',
+    border: 'rgba(255,0,127,0.1)',
+    accents: ['#ff007f', '#00ffff', '#ffaa00'],
+    isLight: false,
+    scanlines: true,
+    fireColors: ['#ff007f', '#9b5de5', '#00f5d4'],
+  },
+  dracula: {
+    name: 'Dracula',
+    bg: '#282a36',
+    bg2: '#1e1f29',
+    fg: '#f8f8f2',
+    muted: 'rgba(248,248,242,0.2)',
+    border: 'rgba(248,248,242,0.1)',
+    accents: ['#bd93f9', '#ff79c6', '#50fa7b'],
+    isLight: false,
+    scanlines: false,
+    fireColors: ['#ff5555', '#ffb86c', '#f1fa8c'],
+  },
+  nord: {
+    name: 'Nord',
+    bg: '#2e3440',
+    bg2: '#242933',
+    fg: '#d8dee9',
+    muted: 'rgba(216,222,233,0.25)',
+    border: 'rgba(216,222,233,0.1)',
+    accents: ['#88c0d0', '#8fbcbb', '#a3be8c'],
+    isLight: false,
+    scanlines: false,
+    fireColors: ['#88c0d0', '#81a1c1', '#5e81ac'],
   },
 }
 
