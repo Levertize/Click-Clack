@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useCanvas } from '../hooks/useCanvas'
 import { useSettingsStore, type BgStyle } from '../store/settings'
-import { themes } from '../themes'
+import { themes, type ThemeName } from '../themes'
 
 interface BgDot {
   x: number
@@ -40,6 +40,24 @@ interface Shockwave {
   active: boolean
 }
 
+const getUiAccents = (uiStyleKey: string, themeKey: ThemeName) => {
+  switch (uiStyleKey) {
+    case 'cute':
+      return ['#f472b6', '#f43f5e', '#ec4899']
+    case 'hacker':
+      return ['#10b981', '#34d399', '#059669']
+    case 'cyber':
+      return ['#06b6d4', '#22d3ee', '#0891b2']
+    case 'retro':
+      return ['#f59e0b', '#d97706', '#fbbf24']
+    case 'glass':
+      return ['#ffffff', '#e2e8f0', '#cbd5e1']
+    case 'classic':
+    default:
+      return themes[themeKey]?.accents || ['#00ff9d']
+  }
+}
+
 export function BgCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   
@@ -54,6 +72,7 @@ export function BgCanvas() {
 
   // Subscribe to store settings
   const themeName = useSettingsStore((state) => state.theme)
+  const uiStyle = useSettingsStore((state) => state.uiStyle)
   const bgParticles = useSettingsStore((state) => state.bgParticles)
   const bgStyle = useSettingsStore((state) => state.bgStyle)
   const bgInteraction = useSettingsStore((state) => state.bgInteraction)
@@ -63,9 +82,8 @@ export function BgCanvas() {
   useCanvas(canvasRef)
 
   // Reinitialize backgrounds
-  const reinitBackground = (width: number, height: number, style: BgStyle, count: number, themeKey: typeof themeName) => {
-    const themeObj = themes[themeKey]
-    const accents = themeObj.accents
+  const reinitBackground = (width: number, height: number, style: BgStyle, count: number, themeKey: typeof themeName, uiStyleKey: typeof uiStyle) => {
+    const accents = getUiAccents(uiStyleKey, themeKey)
     
     // Clear old state
     dotsRef.current = []
@@ -139,9 +157,9 @@ export function BgCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current
     if (canvas) {
-      reinitBackground(canvas.width, canvas.height, bgStyle, bgCount, themeName)
+      reinitBackground(canvas.width, canvas.height, bgStyle, bgCount, themeName, uiStyle)
     }
-  }, [themeName, bgStyle, bgCount])
+  }, [themeName, bgStyle, bgCount, uiStyle])
 
   // Canvas interaction listeners
   useEffect(() => {
@@ -206,8 +224,7 @@ export function BgCanvas() {
 
       const w = canvas.width
       const h = canvas.height
-      const activeTheme = themes[themeName]
-      const accents = activeTheme.accents
+      const accents = getUiAccents(uiStyle, themeName)
 
       // Shockwave calculation
       const wave = shockwaveRef.current
@@ -227,7 +244,7 @@ export function BgCanvas() {
       if (bgStyle === 'bokeh' || bgStyle === 'starfield') {
         const dots = dotsRef.current
         if (dots.length === 0) {
-          reinitBackground(w, h, bgStyle, bgCount, themeName)
+          reinitBackground(w, h, bgStyle, bgCount, themeName, uiStyle)
           animFrame = requestAnimationFrame(tick)
           return
         }
@@ -314,7 +331,7 @@ export function BgCanvas() {
       else if (bgStyle === 'grid') {
         const grid = gridNodesRef.current
         if (grid.length === 0) {
-          reinitBackground(w, h, bgStyle, bgCount, themeName)
+          reinitBackground(w, h, bgStyle, bgCount, themeName, uiStyle)
           animFrame = requestAnimationFrame(tick)
           return
         }
@@ -414,7 +431,7 @@ export function BgCanvas() {
       else if (bgStyle === 'matrix') {
         const streams = matrixStreamsRef.current
         if (streams.length === 0) {
-          reinitBackground(w, h, bgStyle, bgCount, themeName)
+          reinitBackground(w, h, bgStyle, bgCount, themeName, uiStyle)
           animFrame = requestAnimationFrame(tick)
           return
         }
@@ -492,7 +509,7 @@ export function BgCanvas() {
 
     animFrame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(animFrame)
-  }, [bgParticles, themeName, bgStyle, bgInteraction, bgCount, bgSpeed])
+  }, [bgParticles, themeName, uiStyle, bgStyle, bgInteraction, bgCount, bgSpeed])
 
   return (
     <canvas

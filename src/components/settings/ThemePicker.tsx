@@ -1,15 +1,20 @@
 import { useSettingsStore } from '../../store/settings'
+import { uiPresets } from '../../utils/stylePresets'
 import { themes, type ThemeName } from '../../themes'
 
 export function ThemePicker() {
   const currentTheme = useSettingsStore((state) => state.theme)
   const setTheme = useSettingsStore((state) => state.setTheme)
+  const uiStyle = useSettingsStore((state) => state.uiStyle)
+  const preset = uiPresets[uiStyle]
 
   const themeKeys = Object.keys(themes) as ThemeName[]
 
   return (
     <div className="flex flex-col gap-2 py-2">
-      <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">Theme</span>
+      <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">
+        {preset.decorateHeader('Theme')}
+      </span>
       <div className="grid grid-cols-3 gap-2">
         {themeKeys.map((key) => {
           const theme = themes[key]

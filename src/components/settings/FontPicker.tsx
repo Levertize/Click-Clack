@@ -1,8 +1,11 @@
 import { useSettingsStore, type FontKey } from '../../store/settings'
+import { uiPresets } from '../../utils/stylePresets'
 
 export function FontPicker() {
   const currentFont = useSettingsStore((state) => state.font)
   const setFont = useSettingsStore((state) => state.setFont)
+  const uiStyle = useSettingsStore((state) => state.uiStyle)
+  const preset = uiPresets[uiStyle]
 
   const fonts: { key: FontKey; label: string; className: string }[] = [
     { key: 'dmSans', label: 'DM Sans', className: 'font-dm-sans' },
@@ -13,7 +16,9 @@ export function FontPicker() {
 
   return (
     <div className="flex flex-col gap-2 py-2">
-      <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">Font Family</span>
+      <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">
+        {preset.decorateHeader('Font Family')}
+      </span>
       <div className="flex flex-col gap-1">
         {fonts.map((f) => (
           <button

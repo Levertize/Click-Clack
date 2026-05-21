@@ -15,6 +15,8 @@ export type BgStyle = 'bokeh' | 'starfield' | 'grid' | 'matrix'
 export type BgInteraction = 'none' | 'repel' | 'gravity'
 export type TypingMode = 'sandbox' | 'test'
 export type TypingLanguage = 'english' | 'indonesian'
+export type UiStyle = 'classic' | 'cute' | 'hacker' | 'cyber' | 'retro' | 'glass'
+
 
 export interface SettingsState {
   effect: Effect
@@ -52,6 +54,12 @@ export interface SettingsState {
   typingLanguage: TypingLanguage
   testDuration: number     // in seconds
 
+  // UI customization style settings
+  uiStyle: UiStyle
+  uiPanelOpen: boolean
+  showWatermark: boolean
+
+
   setEffect: (e: Effect) => void
   setIntensity: (n: number) => void
   setSpeed: (n: number) => void
@@ -87,6 +95,13 @@ export interface SettingsState {
   setTypingMode: (m: TypingMode) => void
   setTypingLanguage: (l: TypingLanguage) => void
   setTestDuration: (d: number) => void
+
+  // UI style setters
+  setUiStyle: (s: UiStyle) => void
+  toggleUiPanel: () => void
+  closeUiPanel: () => void
+  toggleShowWatermark: () => void
+  setShowWatermark: (v: boolean) => void
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -127,6 +142,12 @@ export const useSettingsStore = create<SettingsState>()(
       typingLanguage: 'english',
       testDuration: 60,
 
+      // UI customization style defaults
+      uiStyle: 'classic',
+      uiPanelOpen: false,
+      showWatermark: true,
+
+
       setEffect: (effect) => set({ effect }),
       setIntensity: (intensity) => set({ intensity }),
       setSpeed: (speed) => set({ speed }),
@@ -135,7 +156,7 @@ export const useSettingsStore = create<SettingsState>()(
       toggleBgParticles: () => set((state) => ({ bgParticles: !state.bgParticles })),
       toggleRainbowChars: () => set((state) => ({ rainbowChars: !state.rainbowChars })),
       togglePanel: () => set((state) => ({ panelOpen: !state.panelOpen })),
-      closePanel: () => set({ panelOpen: false }),
+      closePanel: () => set({ panelOpen: false, uiPanelOpen: false }),
 
       // Custom Cursor setters
       setCursorStyle: (cursorStyle) => set({ cursorStyle }),
@@ -162,6 +183,13 @@ export const useSettingsStore = create<SettingsState>()(
       setTypingMode: (typingMode) => set({ typingMode }),
       setTypingLanguage: (typingLanguage) => set({ typingLanguage }),
       setTestDuration: (testDuration) => set({ testDuration }),
+
+      // UI style setters
+      setUiStyle: (uiStyle) => set({ uiStyle }),
+      toggleUiPanel: () => set((state) => ({ uiPanelOpen: !state.uiPanelOpen })),
+      closeUiPanel: () => set({ uiPanelOpen: false }),
+      toggleShowWatermark: () => set((state) => ({ showWatermark: !state.showWatermark })),
+      setShowWatermark: (showWatermark) => set({ showWatermark }),
     }),
     {
       name: 'aesthetic-typing-settings-v4', // bumped version to avoid localstorage collisions

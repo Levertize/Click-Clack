@@ -1,4 +1,5 @@
 import { useSettingsStore, type SoundEffect } from '../../store/settings'
+import { uiPresets } from '../../utils/stylePresets'
 import { SliderRow } from './SliderRow'
 
 export function AudioSettings() {
@@ -11,7 +12,10 @@ export function AudioSettings() {
     setSoundPitch,
     screenShake,
     setScreenShake,
+    uiStyle,
   } = useSettingsStore()
+
+  const preset = uiPresets[uiStyle]
 
   const presets: { key: SoundEffect; label: string }[] = [
     { key: 'none', label: 'Mute' },
@@ -23,23 +27,24 @@ export function AudioSettings() {
 
   return (
     <div className="flex flex-col gap-4 py-2">
-      <hr className="border-[var(--border)]" />
-      <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">Audio & Feedback</span>
+      <hr className={preset.dividerClass} />
+      <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">
+        {preset.decorateHeader('Audio & Feedback')}
+      </span>
 
       {/* Sound Effect Selector */}
       <div className="flex flex-col gap-2">
-        <span className="text-[10px] opacity-75 font-semibold">Keystroke Sounds</span>
+        <span className="text-[10px] opacity-75 font-semibold">
+          {uiStyle === 'cute' ? '✿ Keystroke Sounds ✿' : 'Keystroke Sounds'}
+        </span>
         <div className="grid grid-cols-2 gap-1.5">
           {presets.map((p) => (
             <button
               key={p.key}
               onClick={() => setSoundEffect(p.key)}
               className={`
-                py-1.5 px-2 rounded-md border text-[11px] transition-all duration-200 outline-hidden cursor-pointer text-center
-                ${soundEffect === p.key 
-                  ? 'border-[var(--accent)] bg-[var(--muted)] text-[var(--accent)] font-semibold scale-[1.01]' 
-                  : 'border-[var(--border)] hover:bg-[var(--muted)] opacity-85 hover:opacity-100'
-                }
+                py-1.5 px-2 text-[11px] transition-all duration-200 outline-hidden cursor-pointer text-center
+                ${preset.buttonClass(soundEffect === p.key)}
                 ${p.key === 'none' ? 'col-span-2' : ''}
               `}
             >
@@ -80,3 +85,4 @@ export function AudioSettings() {
     </div>
   )
 }
+

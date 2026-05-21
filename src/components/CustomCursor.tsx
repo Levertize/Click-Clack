@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { useCursor } from '../hooks/useCursor'
 import { useSettingsStore, type CursorTrail } from '../store/settings'
 import { themes } from '../themes'
 
@@ -24,10 +23,18 @@ interface TrailParticle {
 const MATRIX_CHARS = '01'.split('')
 
 export function CustomCursor({ focused }: CustomCursorProps) {
-  const { mouseX, mouseY, ringX, ringY } = useCursor()
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const particlesRef = useRef<TrailParticle[]>([])
+  
+  // Track cursor position in refs
+  const mouseRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+  const ringRef = useRef({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
   const prevMouseRef = useRef({ x: 0, y: 0 })
+
+  // DOM element refs for bypass updates
+  const ringElRef = useRef<HTMLDivElement | null>(null)
+  const dotElRef = useRef<HTMLDivElement | null>(null)
+  const crosshairElRef = useRef<HTMLDivElement | null>(null)
 
   // Connect settings
   const cursorStyle = useSettingsStore((state) => state.cursorStyle)
@@ -92,6 +99,10 @@ export function CustomCursor({ focused }: CustomCursorProps) {
   useEffect(() => {
     if (cursorStyle === 'none') return
 
+    // Position mouse initially to current viewport center
+    mouseRef.current = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+    ringRef.current = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
+
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -141,8 +152,10 @@ export function CustomCursor({ focused }: CustomCursorProps) {
       }
     }
 
-    // Handle mouse move to leave trails
+    // Handle mouse move to update ref coordinates and spawn trails
     const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY }
+
       if (cursorTrail === 'none') return
       
       const dx = e.clientX - prevMouseRef.current.x
@@ -216,103 +229,117 @@ export function CustomCursor({ focused }: CustomCursorProps) {
 
     let animFrame: number
     const tick = () => {
+      const mouse = mouseRef.current
+      const ring = ringRef.current
+
+      // Retrieve easing rate dynamically from state
+      const easing = useSettingsStore.getState().cursorEasing
+
+      // Smooth interpolation for the ring position
+      ring.x += (mouse.x - ring.x) * easing
+      ring.y += (mouse.y - ring.y) * easing
+
+      // Update positions of cursor elements directly via DOM styling
+      if (dotElRef.current) {
+        dotElRef.current.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0) translate(-50%, -50%)`
+      }
+      if (ringElRef.current) {
+        ringElRef.current.style.transform = `translate3d(${ring.x}px, ${ring.y}px, 0) translate(-50%, -50%)`
+      }
+      if (crosshairElRef.current) {
+        crosshairElRef.current.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0)`
+      }
+
+      // Draw trails on canvas
       const ctx = canvas.getContext('2d')
-      if (!ctx) {
-        animFrame = requestAnimationFrame(tick)
-        return
-      }
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+        const activeParticles = particlesRef.current
+        const nextParticles: TrailParticle[] = []
 
-      const activeParticles = particlesRef.current
-      const nextParticles: TrailParticle[] = []
-
-      for (let i = 0; i < activeParticles.length; i++) {
-        const p = activeParticles[i]
-        
-        // Physics update
-        p.x += p.vx
-        p.y += p.vy
-        p.life -= p.decay
-
-        if (p.life > 0) {
-          ctx.save()
+        for (let i = 0; i < activeParticles.length; i++) {
+          const p = activeParticles[i]
           
-          if (p.type === 'click-ripple') {
-            // Ripple ring
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, p.size + (1.0 - p.life) * 45, 0, Math.PI * 2)
-            ctx.strokeStyle = p.color
-            ctx.lineWidth = 2 * p.life
-            ctx.globalAlpha = p.life
-            ctx.stroke()
-          } else if (p.type === 'click-spark') {
-            // Spark sparks
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2)
-            ctx.fillStyle = p.color
-            ctx.globalAlpha = p.life
-            ctx.fill()
-          } else if (p.type === 'glow-dots') {
-            // Fading soft glow dot
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2)
-            ctx.fillStyle = p.color
-            ctx.globalAlpha = p.alpha * p.life
-            ctx.fill()
-          } else if (p.type === 'sparkles') {
-            // Star twinkle shape
-            const cx = p.x
-            const cy = p.y
-            const spikes = 4
-            const outerRadius = p.size * p.life * 1.5
-            const innerRadius = p.size * p.life * 0.4
+          // Physics update
+          p.x += p.vx
+          p.y += p.vy
+          p.life -= p.decay
+
+          if (p.life > 0) {
+            ctx.save()
             
-            let rot = (Math.PI / 2) * 3
-            let x = cx
-            let y = cy
-            const step = Math.PI / spikes
+            if (p.type === 'click-ripple') {
+              ctx.beginPath()
+              ctx.arc(p.x, p.y, p.size + (1.0 - p.life) * 45, 0, Math.PI * 2)
+              ctx.strokeStyle = p.color
+              ctx.lineWidth = 2 * p.life
+              ctx.globalAlpha = p.life
+              ctx.stroke()
+            } else if (p.type === 'click-spark') {
+              ctx.beginPath()
+              ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2)
+              ctx.fillStyle = p.color
+              ctx.globalAlpha = p.life
+              ctx.fill()
+            } else if (p.type === 'glow-dots') {
+              ctx.beginPath()
+              ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2)
+              ctx.fillStyle = p.color
+              ctx.globalAlpha = p.alpha * p.life
+              ctx.fill()
+            } else if (p.type === 'sparkles') {
+              const cx = p.x
+              const cy = p.y
+              const spikes = 4
+              const outerRadius = p.size * p.life * 1.5
+              const innerRadius = p.size * p.life * 0.4
+              
+              let rot = (Math.PI / 2) * 3
+              let x = cx
+              let y = cy
+              const step = Math.PI / spikes
 
-            ctx.beginPath()
-            ctx.moveTo(cx, cy - outerRadius)
-            for (let idx = 0; idx < spikes; idx++) {
-              x = cx + Math.cos(rot) * outerRadius
-              y = cy + Math.sin(rot) * outerRadius
-              ctx.lineTo(x, y)
-              rot += step
+              ctx.beginPath()
+              ctx.moveTo(cx, cy - outerRadius)
+              for (let idx = 0; idx < spikes; idx++) {
+                x = cx + Math.cos(rot) * outerRadius
+                y = cy + Math.sin(rot) * outerRadius
+                ctx.lineTo(x, y)
+                rot += step
 
-              x = cx + Math.cos(rot) * innerRadius
-              y = cy + Math.sin(rot) * innerRadius
-              ctx.lineTo(x, y)
-              rot += step
+                x = cx + Math.cos(rot) * innerRadius
+                y = cy + Math.sin(rot) * innerRadius
+                ctx.lineTo(x, y)
+                rot += step
+              }
+              ctx.lineTo(cx, cy - outerRadius)
+              ctx.closePath()
+              ctx.fillStyle = p.color
+              ctx.globalAlpha = p.life
+              ctx.fill()
+            } else if (p.type === 'matrix') {
+              ctx.font = `bold ${p.size}px monospace`
+              ctx.fillStyle = p.color
+              ctx.globalAlpha = p.life
+              ctx.fillText(p.char || '1', p.x, p.y)
+            } else if (p.type === 'bubbles') {
+              ctx.beginPath()
+              ctx.arc(p.x, p.y, p.size * (1.5 - p.life * 0.5), 0, Math.PI * 2)
+              ctx.strokeStyle = p.color
+              ctx.lineWidth = 1
+              ctx.globalAlpha = p.alpha * p.life
+              ctx.stroke()
             }
-            ctx.lineTo(cx, cy - outerRadius)
-            ctx.closePath()
-            ctx.fillStyle = p.color
-            ctx.globalAlpha = p.life
-            ctx.fill()
-          } else if (p.type === 'matrix') {
-            // Matrix characters
-            ctx.font = `bold ${p.size}px monospace`
-            ctx.fillStyle = p.color
-            ctx.globalAlpha = p.life
-            ctx.fillText(p.char || '1', p.x, p.y)
-          } else if (p.type === 'bubbles') {
-            // Bubbles rising
-            ctx.beginPath()
-            ctx.arc(p.x, p.y, p.size * (1.5 - p.life * 0.5), 0, Math.PI * 2)
-            ctx.strokeStyle = p.color
-            ctx.lineWidth = 1
-            ctx.globalAlpha = p.alpha * p.life
-            ctx.stroke()
-          }
 
-          ctx.restore()
-          nextParticles.push(p)
+            ctx.restore()
+            nextParticles.push(p)
+          }
         }
+
+        particlesRef.current = nextParticles
       }
 
-      particlesRef.current = nextParticles
       animFrame = requestAnimationFrame(tick)
     }
 
@@ -371,13 +398,14 @@ export function CustomCursor({ focused }: CustomCursorProps) {
       {/* Render selected style */}
       {(cursorStyle === 'dot-ring' || cursorStyle === 'ring-only') && (
         <div
+          ref={ringElRef}
           className="custom-cursor fixed pointer-events-none z-50 rounded-full border-[1.5px] transition-[width,height] duration-200 ease-out"
           style={{
             width: `${ringSize}px`,
             height: `${ringSize}px`,
             left: 0,
             top: 0,
-            transform: `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`,
+            transform: `translate3d(${ringRef.current.x}px, ${ringRef.current.y}px, 0) translate(-50%, -50%)`,
             ...ringColorStyle,
           }}
         />
@@ -385,13 +413,14 @@ export function CustomCursor({ focused }: CustomCursorProps) {
 
       {(cursorStyle === 'dot-ring' || cursorStyle === 'dot-only') && (
         <div
+          ref={dotElRef}
           className="custom-cursor fixed pointer-events-none z-50 rounded-full"
           style={{
             width: `${dotSize}px`,
             height: `${dotSize}px`,
             left: 0,
             top: 0,
-            transform: `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`,
+            transform: `translate3d(${mouseRef.current.x}px, ${mouseRef.current.y}px, 0) translate(-50%, -50%)`,
             ...dotColorStyle,
           }}
         />
@@ -399,11 +428,12 @@ export function CustomCursor({ focused }: CustomCursorProps) {
 
       {cursorStyle === 'crosshair' && (
         <div
+          ref={crosshairElRef}
           className="custom-cursor fixed pointer-events-none z-50"
           style={{
             left: 0,
             top: 0,
-            transform: `translate3d(${mouseX}px, ${mouseY}px, 0)`,
+            transform: `translate3d(${mouseRef.current.x}px, ${mouseRef.current.y}px, 0)`,
           }}
         >
           {/* Top Tick */}

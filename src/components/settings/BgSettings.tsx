@@ -1,4 +1,5 @@
 import { useSettingsStore, type BgStyle, type BgInteraction } from '../../store/settings'
+import { uiPresets } from '../../utils/stylePresets'
 import { SliderRow } from './SliderRow'
 
 export function BgSettings() {
@@ -12,7 +13,10 @@ export function BgSettings() {
     setBgCount,
     bgSpeed,
     setBgSpeed,
+    uiStyle,
   } = useSettingsStore()
+
+  const preset = uiPresets[uiStyle]
 
   const styles: { key: BgStyle; label: string }[] = [
     { key: 'bokeh', label: 'Bokeh Dots' },
@@ -30,9 +34,11 @@ export function BgSettings() {
   // If ambient background is disabled, we gray out and lock these options
   return (
     <div className={`flex flex-col gap-4 py-2 transition-opacity duration-300 ${!bgParticles ? 'opacity-40 pointer-events-none' : ''}`}>
-      <hr className="border-[var(--border)]" />
+      <hr className={preset.dividerClass} />
       <div className="flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">Background FX</span>
+        <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">
+          {preset.decorateHeader('Background FX')}
+        </span>
         {!bgParticles && (
           <span className="text-[9px] text-[var(--accent)] font-semibold uppercase tracking-wider animate-pulse">Disabled</span>
         )}
@@ -40,7 +46,9 @@ export function BgSettings() {
 
       {/* Style Choices */}
       <div className="flex flex-col gap-2">
-        <span className="text-[10px] opacity-75 font-semibold">Aesthetic Style</span>
+        <span className="text-[10px] opacity-75 font-semibold">
+          {uiStyle === 'cute' ? '✿ Aesthetic Style ✿' : 'Aesthetic Style'}
+        </span>
         <div className="grid grid-cols-2 gap-1.5">
           {styles.map((s) => (
             <button
@@ -48,11 +56,8 @@ export function BgSettings() {
               onClick={() => setBgStyle(s.key)}
               disabled={!bgParticles}
               className={`
-                py-1.5 px-2 rounded-md border text-[11px] transition-all duration-200 outline-hidden cursor-pointer text-center
-                ${bgStyle === s.key 
-                  ? 'border-[var(--accent)] bg-[var(--muted)] text-[var(--accent)] font-semibold scale-[1.01]' 
-                  : 'border-[var(--border)] hover:bg-[var(--muted)] opacity-85 hover:opacity-100'
-                }
+                py-1.5 px-2 text-[11px] transition-all duration-200 outline-hidden cursor-pointer text-center
+                ${preset.buttonClass(bgStyle === s.key)}
               `}
             >
               {s.label}
@@ -63,7 +68,9 @@ export function BgSettings() {
 
       {/* Mouse Attraction/Repulsion Force Field */}
       <div className="flex flex-col gap-2">
-        <span className="text-[10px] opacity-75 font-semibold">Mouse Interaction Field</span>
+        <span className="text-[10px] opacity-75 font-semibold">
+          {uiStyle === 'cute' ? '✿ Mouse Interaction Field ✿' : 'Mouse Interaction Field'}
+        </span>
         <div className="grid grid-cols-3 gap-1.5">
           {interactions.map((i) => (
             <button
@@ -71,11 +78,8 @@ export function BgSettings() {
               onClick={() => setBgInteraction(i.key)}
               disabled={!bgParticles}
               className={`
-                py-1.5 px-1 rounded-md border text-[10px] transition-all duration-200 outline-hidden cursor-pointer text-center
-                ${bgInteraction === i.key 
-                  ? 'border-[var(--accent)] bg-[var(--muted)] text-[var(--accent)] font-semibold scale-[1.01]' 
-                  : 'border-[var(--border)] hover:bg-[var(--muted)] opacity-85 hover:opacity-100'
-                }
+                py-1.5 px-1 text-[10px] transition-all duration-200 outline-hidden cursor-pointer text-center
+                ${preset.buttonClass(bgInteraction === i.key)}
               `}
             >
               {i.label}
@@ -105,3 +109,4 @@ export function BgSettings() {
     </div>
   )
 }
+

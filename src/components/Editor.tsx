@@ -1,5 +1,6 @@
 import { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react'
 import { useSettingsStore } from '../store/settings'
+import { uiPresets } from '../utils/stylePresets'
 import { getCaretCoords } from '../hooks/useCaretPos'
 import { themes, pickAccent } from '../themes'
 import { keyboardSynth } from '../utils/audio'
@@ -20,6 +21,8 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
   ({ onKeystroke, onCharCount, onFocus, onBlur }, ref) => {
     const editorRef = useRef<HTMLDivElement | null>(null)
     const font = useSettingsStore((state) => state.font)
+    const uiStyle = useSettingsStore((state) => state.uiStyle)
+    const preset = uiPresets[uiStyle]
     const [shakeTransform, setShakeTransform] = useState('translate3d(0, 0, 0)')
 
     useImperativeHandle(ref, () => ({
@@ -178,31 +181,37 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
       dmSans: 'font-dm-sans',
     }
 
+
+
     return (
       <div 
         className="relative w-full max-w-4xl px-4 py-8 transition-transform duration-75"
         style={{ transform: shakeTransform }}
       >
-        <div
-          ref={editorRef}
-          contentEditable
-          spellCheck={false}
-          onKeyDown={handleKeyDown}
-          onInput={handleInput}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          data-placeholder="Start typing to experience the magic..."
-          className={`
-            outline-hidden min-h-[30vh] max-h-[70vh] w-full text-center text-3xl md:text-4xl 
-            font-medium leading-relaxed tracking-wide overflow-y-auto whitespace-pre-wrap
-            break-words transition-all duration-300 z-10 select-text
-            ${fontClasses[font] || 'font-dm-sans'}
-          `}
-          style={{
-            // Custom styles for placeholders and selections
-            caretColor: 'var(--accent)',
-          }}
-        />
+        <div className="overflow-hidden transition-all duration-300 bg-transparent border-none shadow-none">
+          <div className="p-4 md:p-6">
+            <div
+              ref={editorRef}
+              contentEditable
+              spellCheck={false}
+              onKeyDown={handleKeyDown}
+              onInput={handleInput}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              data-placeholder="Start typing to experience the magic..."
+              className={`
+                outline-hidden min-h-[25vh] max-h-[60vh] w-full text-center text-3xl md:text-4xl 
+                font-medium leading-relaxed tracking-wide overflow-y-auto whitespace-pre-wrap
+                break-words transition-all duration-300 z-10 select-text
+                ${preset.fontClassOverride || ''}
+                ${fontClasses[font] || 'font-dm-sans'}
+              `}
+              style={{
+                caretColor: 'var(--accent)',
+              }}
+            />
+          </div>
+        </div>
         
         {/* Style block for contenteditable placeholder */}
         <style>{`
@@ -224,3 +233,4 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
 )
 
 Editor.displayName = 'Editor'
+

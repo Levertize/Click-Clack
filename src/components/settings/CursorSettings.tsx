@@ -1,4 +1,5 @@
 import { useSettingsStore, type CursorStyle, type CursorColorMode, type CursorTrail } from '../../store/settings'
+import { uiPresets } from '../../utils/stylePresets'
 import { SliderRow } from './SliderRow'
 import { ToggleRow } from './ToggleRow'
 
@@ -18,7 +19,10 @@ export function CursorSettings() {
     toggleCursorClickEffect,
     cursorSize,
     setCursorSize,
+    uiStyle,
   } = useSettingsStore()
+
+  const preset = uiPresets[uiStyle]
 
   const styles: { key: CursorStyle; label: string }[] = [
     { key: 'dot-ring', label: 'Dot & Ring' },
@@ -45,23 +49,24 @@ export function CursorSettings() {
 
   return (
     <div className="flex flex-col gap-4 py-2">
-      <hr className="border-[var(--border)]" />
-      <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">Cursor Customization</span>
+      <hr className={preset.dividerClass} />
+      <span className="text-[10px] uppercase tracking-wider opacity-60 font-bold">
+        {preset.decorateHeader('Cursor Customization')}
+      </span>
 
       {/* Cursor Style Option */}
       <div className="flex flex-col gap-2">
-        <span className="text-[10px] opacity-75 font-semibold">Style</span>
+        <span className="text-[10px] opacity-75 font-semibold">
+          {uiStyle === 'cute' ? '✿ Style ✿' : 'Style'}
+        </span>
         <div className="grid grid-cols-2 gap-1.5">
           {styles.map((s) => (
             <button
               key={s.key}
               onClick={() => setCursorStyle(s.key)}
               className={`
-                py-1.5 px-2.5 rounded-md border text-[11px] transition-all duration-200 outline-hidden cursor-pointer text-center
-                ${cursorStyle === s.key 
-                  ? 'border-[var(--accent)] bg-[var(--muted)] text-[var(--accent)] font-semibold scale-[1.01]' 
-                  : 'border-[var(--border)] hover:bg-[var(--muted)] opacity-85 hover:opacity-100'
-                }
+                py-1.5 px-2.5 text-[11px] transition-all duration-200 outline-hidden cursor-pointer text-center
+                ${preset.buttonClass(cursorStyle === s.key)}
               `}
             >
               {s.label}
@@ -72,18 +77,17 @@ export function CursorSettings() {
 
       {/* Cursor Color Mode Option */}
       <div className="flex flex-col gap-2">
-        <span className="text-[10px] opacity-75 font-semibold">Color Mode</span>
+        <span className="text-[10px] opacity-75 font-semibold">
+          {uiStyle === 'cute' ? '✿ Color Mode ✿' : 'Color Mode'}
+        </span>
         <div className="grid grid-cols-2 gap-1.5">
           {colors.map((c) => (
             <button
               key={c.key}
               onClick={() => setCursorColorMode(c.key)}
               className={`
-                py-1.5 px-1 rounded-md border text-[11px] transition-all duration-200 outline-hidden cursor-pointer text-center
-                ${cursorColorMode === c.key 
-                  ? 'border-[var(--accent)] bg-[var(--muted)] text-[var(--accent)] font-semibold scale-[1.01]' 
-                  : 'border-[var(--border)] hover:bg-[var(--muted)] opacity-85 hover:opacity-100'
-                }
+                py-1.5 px-1 text-[11px] transition-all duration-200 outline-hidden cursor-pointer text-center
+                ${preset.buttonClass(cursorColorMode === c.key)}
               `}
             >
               {c.label}
@@ -94,7 +98,7 @@ export function CursorSettings() {
 
       {/* Custom Color Input Choice */}
       {cursorStyle !== 'none' && cursorColorMode === 'custom' && (
-        <div className="flex items-center gap-3 bg-[var(--bg)]/40 p-2.5 rounded-lg border border-[var(--border)]">
+        <div className={`flex items-center gap-3 p-2.5 ${preset.cardBgClass}`}>
           <input
             type="color"
             value={cursorCustomColor}
@@ -116,18 +120,17 @@ export function CursorSettings() {
       {/* Cursor Trails */}
       {cursorStyle !== 'none' && (
         <div className="flex flex-col gap-2">
-          <span className="text-[10px] opacity-75 font-semibold">Cursor Trail</span>
+          <span className="text-[10px] opacity-75 font-semibold">
+            {uiStyle === 'cute' ? '✿ Cursor Trail ✿' : 'Cursor Trail'}
+          </span>
           <div className="grid grid-cols-3 gap-1.5">
             {trails.map((t) => (
               <button
                 key={t.key}
                 onClick={() => setCursorTrail(t.key)}
                 className={`
-                  py-1.5 px-0.5 rounded-md border text-[10px] transition-all duration-200 outline-hidden cursor-pointer text-center
-                  ${cursorTrail === t.key 
-                    ? 'border-[var(--accent)] bg-[var(--muted)] text-[var(--accent)] font-semibold scale-[1.01]' 
-                    : 'border-[var(--border)] hover:bg-[var(--muted)] opacity-85 hover:opacity-100'
-                  }
+                  py-1.5 px-0.5 text-[10px] transition-all duration-200 outline-hidden cursor-pointer text-center
+                  ${preset.buttonClass(cursorTrail === t.key)}
                   ${t.key === 'none' ? 'col-span-3' : ''}
                 `}
               >
@@ -170,3 +173,4 @@ export function CursorSettings() {
     </div>
   )
 }
+
