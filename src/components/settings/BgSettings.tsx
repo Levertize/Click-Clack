@@ -40,7 +40,7 @@ export function BgSettings() {
           {preset.decorateHeader('Background FX')}
         </span>
         {!bgParticles && (
-          <span className="text-[9px] text-[var(--accent)] font-semibold uppercase tracking-wider animate-pulse">Disabled</span>
+          <span className="text-[9px] text-[var(--ui-accent)] font-semibold uppercase tracking-wider animate-pulse">Disabled</span>
         )}
       </div>
 

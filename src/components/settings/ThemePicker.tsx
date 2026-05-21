@@ -26,7 +26,7 @@ export function ThemePicker() {
               className={`
                 flex flex-col items-center justify-between p-2 rounded-lg border transition-all duration-200 outline-hidden relative cursor-pointer
                 ${isActive 
-                  ? 'border-[var(--accent)] ring-1 ring-[var(--accent)] scale-[1.03] shadow-md shadow-[var(--accent)]/10' 
+                  ? 'border-[var(--ui-accent)] ring-1 ring-[var(--ui-accent)] scale-[1.03] shadow-md shadow-[var(--ui-accent)]/10' 
                   : 'border-[var(--border)] hover:border-[var(--muted)] hover:scale-[1.02]'
                 }
               `}

@@ -28,7 +28,7 @@ export function FontPicker() {
               w-full text-left py-2 px-3 rounded-md text-[0.9rem] transition-all duration-200 outline-hidden
               ${f.className}
               ${currentFont === f.key 
-                ? 'bg-[var(--muted)] text-[var(--accent)] font-bold border-l-2 border-[var(--accent)]' 
+                ? 'bg-[var(--muted)] text-[var(--ui-accent)] font-bold border-l-2 border-[var(--ui-accent)]' 
                 : 'hover:bg-[var(--muted)] opacity-80 hover:opacity-100'
               }
             `}

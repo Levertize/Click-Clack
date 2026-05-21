@@ -207,7 +207,7 @@ export const Editor = forwardRef<EditorHandle, EditorProps>(
                 ${fontClasses[font] || 'font-dm-sans'}
               `}
               style={{
-                caretColor: 'var(--accent)',
+                caretColor: 'var(--ui-accent)',
               }}
             />
           </div>

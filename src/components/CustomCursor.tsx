@@ -2,6 +2,26 @@ import { useEffect, useRef } from 'react'
 import { useSettingsStore, type CursorTrail } from '../store/settings'
 import { themes } from '../themes'
 
+const getUiAccentColor = (style: string, themeKey: string) => {
+  switch (style) {
+    case 'cute':
+      return '#f472b6' // pink-400
+    case 'hacker':
+      return '#10b981' // emerald-500
+    case 'cyber':
+      return '#06b6d4' // cyan-500
+    case 'retro':
+      return '#f59e0b' // yellow-500
+    case 'glass':
+      return '#ffffff' // white
+    case 'classic':
+    default: {
+      const theme = themes[themeKey as keyof typeof themes]
+      return theme?.accents[0] || '#00ff9d'
+    }
+  }
+}
+
 interface CustomCursorProps {
   focused: boolean
 }
@@ -44,6 +64,7 @@ export function CustomCursor({ focused }: CustomCursorProps) {
   const cursorSize = useSettingsStore((state) => state.cursorSize)
   const cursorClickEffect = useSettingsStore((state) => state.cursorClickEffect)
   const themeName = useSettingsStore((state) => state.theme)
+  const uiStyle = useSettingsStore((state) => state.uiStyle)
 
   const sizeMultiplier = cursorSize / 3 // 3 is standard size (x1.0)
   const dotSize = 8 * sizeMultiplier
@@ -62,8 +83,7 @@ export function CustomCursor({ focused }: CustomCursorProps) {
       return '#ffffff'
     }
     // Accent mode
-    const activeTheme = themes[themeName]
-    return activeTheme ? activeTheme.accents[0] : '#00ff9d'
+    return getUiAccentColor(uiStyle, themeName)
   }
 
   // Set style bindings
@@ -77,7 +97,7 @@ export function CustomCursor({ focused }: CustomCursorProps) {
     ? { animation: 'cursor-dot-rainbow 6s linear infinite' }
     : isCustom
     ? { backgroundColor: cursorCustomColor }
-    : { backgroundColor: 'var(--accent)' }
+    : { backgroundColor: 'var(--ui-accent)' }
 
   const ringColorStyle = isInvert
     ? { borderColor: 'white', mixBlendMode: 'difference' as const }
@@ -85,7 +105,7 @@ export function CustomCursor({ focused }: CustomCursorProps) {
     ? { animation: 'cursor-ring-rainbow 6s linear infinite' }
     : isCustom
     ? { borderColor: cursorCustomColor }
-    : { borderColor: 'var(--accent)' }
+    : { borderColor: 'var(--ui-accent)' }
 
   const crosshairColorStyle = isInvert
     ? { backgroundColor: 'white', mixBlendMode: 'difference' as const }
@@ -93,7 +113,7 @@ export function CustomCursor({ focused }: CustomCursorProps) {
     ? { animation: 'cursor-dot-rainbow 6s linear infinite' }
     : isCustom
     ? { backgroundColor: cursorCustomColor }
-    : { backgroundColor: 'var(--accent)' }
+    : { backgroundColor: 'var(--ui-accent)' }
 
   // Mouse trail and click effect setup
   useEffect(() => {

@@ -342,18 +342,18 @@ export const TypingTest = forwardRef<TypingTestHandle, TypingTestProps>(
                   <div className={`flex justify-between items-center px-5 py-3 select-none ${preset.cardBgClass}`}>
                     <div className="flex items-center gap-4">
                       <span className="text-xs uppercase tracking-wider opacity-60 font-semibold">
-                        Language: <span className="text-[var(--accent)] font-bold uppercase">{typingLanguage}</span>
+                        Language: <span className="text-[var(--ui-accent)] font-bold uppercase">{typingLanguage}</span>
                       </span>
                       <span className="text-xs uppercase tracking-wider opacity-60 font-semibold">
-                        Time: <span className="text-[var(--accent)] font-bold">{timeLeft}s</span>
+                        Time: <span className="text-[var(--ui-accent)] font-bold">{timeLeft}s</span>
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="font-mono text-sm font-semibold opacity-70">
-                        Live WPM: <span className="text-[var(--accent)] font-bold">{wpm}</span>
+                        Live WPM: <span className="text-[var(--ui-accent)] font-bold">{wpm}</span>
                       </span>
                       <span className="font-mono text-sm font-semibold opacity-70">
-                        Acc: <span className="text-[var(--accent)] font-bold">{accuracy}%</span>
+                        Acc: <span className="text-[var(--ui-accent)] font-bold">{accuracy}%</span>
                       </span>
                     </div>
                   </div>
@@ -373,8 +373,8 @@ export const TypingTest = forwardRef<TypingTestHandle, TypingTestProps>(
                       let bgHighlight = ''
 
                       if (isCurrent) {
-                        underline = 'underline decoration-2 underline-offset-4 decoration-[var(--accent)]'
-                        wordColor = 'text-[var(--accent)] font-bold glow-sm scale-[1.02] inline-block'
+                        underline = 'underline decoration-2 underline-offset-4 decoration-[var(--ui-accent)]'
+                        wordColor = 'text-[var(--ui-accent)] font-bold glow-sm scale-[1.02] inline-block'
                         bgHighlight = 'bg-[var(--muted)]/50 rounded-sm px-1.5 py-0.5'
                       } else if (isTyped) {
                         if (wasCorrect) {
@@ -401,9 +401,9 @@ export const TypingTest = forwardRef<TypingTestHandle, TypingTestProps>(
                               let charTyped = currentTyped[charIdx]
                               let charColor = ''
                               if (charTyped === undefined) {
-                                charColor = 'text-[var(--accent)] font-bold'
+                                charColor = 'text-[var(--ui-accent)] font-bold'
                               } else if (charTyped === char) {
-                                charColor = 'text-[var(--accent)] opacity-100 font-bold'
+                                charColor = 'text-[var(--ui-accent)] opacity-100 font-bold'
                               } else {
                                 charColor = 'text-[#ff4444] font-bold underline decoration-[#ff4444]'
                               }
@@ -437,8 +437,8 @@ export const TypingTest = forwardRef<TypingTestHandle, TypingTestProps>(
                       onFocus={onFocus}
                       onBlur={onBlur}
                       data-placeholder="Start typing the text here..."
-                      className={`flex-1 outline-hidden text-2xl md:text-3xl text-center py-4 px-6 focus:border-[var(--accent)] transition-all min-h-[64px] overflow-hidden select-text shadow-inner ${preset.cardBgClass}`}
-                      style={{ caretColor: 'var(--accent)' }}
+                      className={`flex-1 outline-hidden text-2xl md:text-3xl text-center py-4 px-6 focus:border-[var(--ui-accent)] transition-all min-h-[64px] overflow-hidden select-text shadow-inner ${preset.cardBgClass}`}
+                      style={{ caretColor: 'var(--ui-accent)' }}
                     />
                     <button 
                       onClick={handleReset} 
@@ -460,7 +460,7 @@ export const TypingTest = forwardRef<TypingTestHandle, TypingTestProps>(
                   className="flex flex-col gap-6 select-none"
                 >
                   <div className="text-center">
-                    <h2 className={`text-3xl font-black uppercase tracking-wider text-[var(--accent)] ${uiStyle === 'cute' ? 'text-pink-500 dark:text-pink-400' : ''}`}>
+                    <h2 className="text-3xl font-black uppercase tracking-wider text-[var(--ui-accent)]">
                       {preset.decorateHeader('Test Results')}
                     </h2>
                     <p className="text-sm opacity-60 mt-1">Typing Speed & Accuracy Metrics</p>
@@ -471,14 +471,14 @@ export const TypingTest = forwardRef<TypingTestHandle, TypingTestProps>(
                     {/* WPM */}
                     <div className={`flex flex-col items-center p-4 ${preset.cardBgClass}`}>
                       <span className="text-[10px] uppercase opacity-55 font-bold tracking-wider">Speed</span>
-                      <span className="text-4xl font-extrabold text-[var(--accent)] mt-1">{wpm}</span>
+                      <span className="text-4xl font-extrabold text-[var(--ui-accent)] mt-1">{wpm}</span>
                       <span className="text-[10px] font-semibold opacity-60 mt-0.5">WPM</span>
                     </div>
 
                     {/* Accuracy */}
                     <div className={`flex flex-col items-center p-4 ${preset.cardBgClass}`}>
                       <span className="text-[10px] uppercase opacity-55 font-bold tracking-wider">Accuracy</span>
-                      <span className="text-4xl font-extrabold text-[var(--accent)] mt-1">{accuracy}%</span>
+                      <span className="text-4xl font-extrabold text-[var(--ui-accent)] mt-1">{accuracy}%</span>
                       <span className="text-[10px] font-semibold opacity-60 mt-0.5">Correct keys</span>
                     </div>
 

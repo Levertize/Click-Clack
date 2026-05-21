@@ -111,7 +111,7 @@ export function CursorSettings() {
               type="text"
               value={cursorCustomColor}
               onChange={(e) => setCursorCustomColor(e.target.value)}
-              className="bg-transparent text-xs font-mono border-b border-[var(--border)] outline-hidden w-full text-[var(--accent)] font-semibold uppercase"
+              className="bg-transparent text-xs font-mono border-b border-[var(--border)] outline-hidden w-full text-[var(--ui-accent)] font-semibold uppercase"
             />
           </div>
         </div>

@@ -14,7 +14,7 @@ export function ToggleRow({ label, checked, onChange }: ToggleRowProps) {
         onClick={onChange}
         className="w-11 h-6 rounded-full p-1 relative flex items-center transition-colors duration-300 outline-hidden"
         style={{
-          backgroundColor: checked ? 'var(--accent)' : 'var(--muted)',
+          backgroundColor: checked ? 'var(--ui-accent)' : 'var(--muted)',
         }}
       >
         <motion.div

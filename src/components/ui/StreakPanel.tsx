@@ -82,7 +82,7 @@ export function StreakPanel({ hidden }: StreakPanelProps) {
     if (s >= 35) return { color: 'text-red-500 shadow-red-500/50', label: 'SUPERCELL! ⚡', bg: 'bg-red-500' }
     if (s >= 20) return { color: 'text-amber-500 shadow-amber-500/40', label: 'ON FIRE 🔥', bg: 'bg-amber-500' }
     if (s >= 8) return { color: 'text-purple-500 shadow-purple-500/30', label: 'COMBO 🌟', bg: 'bg-purple-500' }
-    return { color: 'text-[var(--accent)]', label: 'STREAK', bg: 'bg-[var(--accent)]' }
+    return { color: 'text-[var(--ui-accent)]', label: 'STREAK', bg: 'bg-[var(--ui-accent)]' }
   }
 
   const tier = getStreakTier(streak)
@@ -97,9 +97,9 @@ export function StreakPanel({ hidden }: StreakPanelProps) {
           exit={{ opacity: 0, x: -10 }}
           className="flex items-center gap-2 bg-[var(--bg2)]/60 backdrop-blur-md border border-[var(--border)] px-3 py-1.5 rounded-lg text-xs"
         >
-          <Activity size={12} className="text-[var(--accent)] animate-pulse" />
+          <Activity size={12} className="text-[var(--ui-accent)] animate-pulse" />
           <span className="opacity-60">SPEED:</span>
-          <span className="font-bold text-[var(--accent)]">{wpm} WPM</span>
+          <span className="font-bold text-[var(--ui-accent)]">{wpm} WPM</span>
         </motion.div>
       )}
 
