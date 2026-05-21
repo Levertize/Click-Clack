@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Syne+Mono&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-space-mono: "Space Mono", monospace;
+  --font-syne-mono: "Syne Mono", monospace;
+  --font-playfair: "Playfair Display", serif;
+  --font-dm-sans: "DM Sans", sans-serif;
+}
+
+:root {
+  /* Dynamic styles injected via themes/index.ts */
+  --bg: #0a0a0f;
+  --bg2: #12121c;
+  --fg: #e2e2f0;
+  --accent: #00ff9d;
+  --muted: rgba(226, 226, 240, 0.2);
+  --border: rgba(226, 226, 240, 0.1);
+  
+  /* System variables */
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  color: var(--fg);
+  overflow: hidden;
+  user-select: none;
+  font-family: var(--font-dm-sans);
+}
+
+/* Hide default cursor globally, as we will use a custom cursor */
+* {
+  cursor: none !important;
+}
+
+/* Scrollbar styles if needed */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
